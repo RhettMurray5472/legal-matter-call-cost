@@ -64,38 +64,39 @@ export class LegalWorkflow {
       return { ...decision, matterId: matter.matterId, followUp: null, modelCall: null };
     }
 
-    const raw = await this.infrai.chat.completions.with_raw_response.create(
-      {
-        model: "auto",
-        messages: [
-          {
-            role: "system",
-            content: "Draft a calm, concise legal document signature reminder. Do not add facts."
-          },
-          {
-            role: "user",
-            content: JSON.stringify({
-              clientName: matter.clientName,
-              intakeSummary: matter.intakeSummary,
-              documentTitle: matter.signedDocument.title,
-              deliveredAt: matter.signedDocument.deliveredAt,
-              deadlineAt: matter.deadlineAt,
-              daysRemaining: decision.daysRemaining
-            })
-          }
-        ]
-      },
-      { idempotencyKey: `matter-follow-up-${matter.matterId}-${matter.asOf}` }
-    );
-    const completion = raw.parse();
+    const { data: completion, response } = await this.infrai.chat.completions
+      .create(
+        {
+          model: "auto",
+          messages: [
+            {
+              role: "system",
+              content: "Draft a calm, concise legal document signature reminder. Do not add facts."
+            },
+            {
+              role: "user",
+              content: JSON.stringify({
+                clientName: matter.clientName,
+                intakeSummary: matter.intakeSummary,
+                documentTitle: matter.signedDocument.title,
+                deliveredAt: matter.signedDocument.deliveredAt,
+                deadlineAt: matter.deadlineAt,
+                daysRemaining: decision.daysRemaining
+              })
+            }
+          ]
+        },
+        { idempotencyKey: `matter-follow-up-${matter.matterId}-${matter.asOf}` }
+      )
+      .withResponse();
 
     return {
       ...decision,
       matterId: matter.matterId,
       followUp: completion.choices[0]?.message.content ?? "",
       modelCall: {
-        costUsd: raw.headers.get("x-infrai-cost-usd"),
-        vendor: raw.headers.get("x-infrai-vendor")
+        costUsd: response.headers.get("x-infrai-cost-usd"),
+        vendor: response.headers.get("x-infrai-vendor")
       }
     };
   }

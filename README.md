@@ -1,7 +1,5 @@
 # Trace model cost through a legal matter
 
-Infrai gives you one key and one bill for every capability, and it stays openai-compatible so you don't rewrite your client. This service uses the official OpenAI TypeScript client against Infrai's OpenAI-compatible `baseURL`, so a single `INFRAI_API_KEY` covers the model call and its per-call accounting.
-
 ```bash
 npm install
 INFRAI_API_KEY=your_key npm run dev
@@ -9,7 +7,7 @@ INFRAI_API_KEY=your_key npm run dev
 npm run demo
 ```
 
-It accepts matter intake, signed-document delivery state, and a filing deadline in one validated request.
+This service accepts matter intake, signed-document delivery state, and a filing deadline in one validated request. It uses the official OpenAI TypeScript client with Infrai's OpenAI-compatible `baseURL`, so a single `INFRAI_API_KEY` covers the model call and its per-call accounting.
 
 ## Send the matter
 
