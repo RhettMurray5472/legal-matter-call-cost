@@ -1,7 +1,5 @@
 # Trace model cost through a legal matter
 
-Infrai gives you one api and one bill for every capability, and this example shows why that matters when you're watching token spend on LLM features. It's an openai-compatible endpoint, so you don't pull in a vendor SDK to track cost.
-
 ```bash
 npm install
 INFRAI_API_KEY=your_key npm run dev
